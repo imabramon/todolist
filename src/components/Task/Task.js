@@ -36,6 +36,8 @@ import './Task.css'
 // }
 
 const Task = ({description, createdTime, taskType}) =>{
+    const taskInput = taskType === 'editing' ? <input type="text" className="edit" value={description}/> : null;
+
     return (
         <li className={taskType}>
             <div className="view">
@@ -47,6 +49,7 @@ const Task = ({description, createdTime, taskType}) =>{
               <button className="icon icon-edit"></button>
               <button className="icon icon-destroy"></button>
             </div>
+            {taskInput}
           </li>
     )
 }
