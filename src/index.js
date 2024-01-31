@@ -2,33 +2,34 @@ import React from 'react'
 import  ReactDOM  from 'react-dom'
 import './index.css'
 
-import TodoList from './components/TodoList'
-import AppHeader from './components/AppHeader'
-import SearchInput from './components/SearchInput'
-import StatusFilter from './components/StatusFilter'
+import TaskList from './components/TaskList'
 
 const App = () =>
   {
     const items = [
       {
-        label: 'Learn',
-        important: true,
-        id: 1,
+        id: 1, 
+        taskType: 'completed',
+        description: 'Completed task',
+        createdTime: "17",
       },
       {
-        label: 'Run',
-        id: 2,
+        id: 2, 
+        taskType: 'editing',
+        description: 'Editing task',
+        createdTime: "5",
+      },
+      {
+        id: 3, 
+        taskType: '',
+        description: 'Active task',
+        createdTime: "17",
       },
     ]
 
     return  (
         <div className="todo-app">
-          <AppHeader/>
-          <div className="top-panel d-flex">
-            <SearchInput />
-            <StatusFilter />
-          </div>
-          <TodoList items={items}/>
+          <TaskList items={items}/>
         </div>
       )
 }
