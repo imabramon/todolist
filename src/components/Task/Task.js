@@ -1,58 +1,55 @@
 import React from "react";
 import './Task.css'
 
-// const TodoItem = ({label, important = false}) => {
-//     const style = {
-//         color: important ? "red" : 'inherit', 
-//         fontWeight: important ? 'bold' : 'normal'
-//     }
 
-//     // Перенести в цсс
-//     const buttonStyle = {
-//         float: "right"
-//     }
+class Task extends React.Component{
+  constructor(props){
+    super()
 
-//     return ( 
-//         <li className="list-group-item">
-//             <span className="todo-list-item">
-//                 <span
-//                     className="todo-list-item-label"
-//                     style={style}>
-//                     {label}
-//                 </span>
+    const {taskType, deleteTaskHandler, id} = props;
+    // console.log(deleteTaskHandler)
 
-//                 <button type="button" style={buttonStyle}
-//                         className="btn btn-outline-success btn-sm">
-//                     <i className="fa fa-exclamation" />
-//                 </button>
+    this.state = {
+      taskType
+    }
 
-//                 <button type="button"
-//                         className="btn btn-outline-danger btn-sm"
-//                         style={buttonStyle}>
-//                     <i className="fa fa-trash-o" />
-//                 </button>
-//             </span>
-//         </li>)
-// }
+    this.deleteTask = function(){
+      deleteTaskHandler(id)
+      console.log('deleteTask call')
+    }
+  }
 
-const Task = ({description, createdTime, taskType}) =>{
-    const taskInput = taskType === 'editing' ? <input type="text" className="edit" value={description}/> : null;
+  toggleComplete = ()=>{
+    this.setState(({taskType})=>{
+      if( taskType === '') return {taskType: 'completed'}
+      
+      return {taskType: ''}
+    })
+  }
+
+  render(){
+    const {description, createdTime} = this.props
+    const taskInput = this.state.taskType === 'editing' ? <input type="text" className="edit" value={description}/> : null;
+    const checked = this.state.taskType === 'completed'
 
     return (
-        <li className={taskType}>
+        <li className={this.state.taskType}>
             <div className="view">
-              <input className="toggle" type="checkbox" />
+              <input className="toggle" type="checkbox" checked={checked} onClick={this.toggleComplete}/>
               <label>
                 <span className="description">{description}</span>
                 <span className="created">created {createdTime} seconds ago</span>
               </label>
-              <button className="icon icon-edit"></button>
-              <button className="icon icon-destroy"></button>
+              <button className="icon icon-edit" ></button>
+              <button className="icon icon-destroy" onClick={this.deleteTask}></button>
             </div>
             {taskInput}
           </li>
     )
+  }
 }
+
+
 
 
 export default Task;

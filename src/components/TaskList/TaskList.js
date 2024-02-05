@@ -4,11 +4,11 @@ import './TaskList.css'
 import Task from '../Task/'
 
 
-const TodoList = ({items})=>{
+const TodoList = ({items, deleteTaskHandler})=>{
   const tasks = items.map((item)=>{
-    const {id, ...itemProps} = item
+    // const {id, ...itemProps} = item
     return (
-      <Task key={id} {...itemProps}/>
+      <Task key={item.id} {...item} deleteTaskHandler={deleteTaskHandler}/>
     )
   })
 
