@@ -3,47 +3,26 @@ import './Task.css'
 
 
 class Task extends React.Component{
-  constructor(props){
-    super()
-
-    const {taskType, deleteTaskHandler, id} = props;
-    // console.log(deleteTaskHandler)
-
-    this.state = {
-      taskType
-    }
-
-    this.deleteTask = function(){
-      deleteTaskHandler(id)
-      console.log('deleteTask call')
-    }
-  }
-
-  toggleComplete = ()=>{
-    this.setState(({taskType})=>{
-      if( taskType === '') return {taskType: 'completed'}
-      
-      return {taskType: ''}
-    })
-  }
+  
 
   render(){
-    const {description, createdTime} = this.props
-    const taskInput = this.state.taskType === 'editing' ? <input type="text" className="edit" value={description}/> : null;
-    const checked = this.state.taskType === 'completed'
+    const {description, createdTime, completed, onToggleCompeleted, onDeleted} = this.props
+    // const taskInput = this.state.editing ? <input type="text" className="edit" value={description}/> : null;
+    const competedClass = completed ? 'completed' : '';
+    const itemClassNames = [competedClass].filter(el=>el).join(' ');
 
     return (
-        <li className={this.state.taskType}>
+        <li className={itemClassNames}>
             <div className="view">
-              <input className="toggle" type="checkbox" checked={checked} onClick={this.toggleComplete}/>
+              <input className="toggle" type="checkbox" checked={completed} onClick={onToggleCompeleted}/>
               <label>
                 <span className="description">{description}</span>
                 <span className="created">created {createdTime} seconds ago</span>
               </label>
               <button className="icon icon-edit" ></button>
-              <button className="icon icon-destroy" onClick={this.deleteTask}></button>
+              <button className="icon icon-destroy" onClick={onDeleted}></button>
             </div>
-            {taskInput}
+            {/* {taskInput} */}
           </li>
     )
   }

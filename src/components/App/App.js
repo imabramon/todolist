@@ -13,19 +13,19 @@ class App extends React.Component {
       items: [
         {
           id: 1, 
-          taskType: 'completed',
+          completed: true,
           description: 'Completed task',
           createdTime: "17",
         },
         {
           id: 2, 
-          taskType: 'editing',
+          completed: false,
           description: 'Editing task',
           createdTime: "5",
         },
         {
           id: 3, 
-          taskType: '',
+          completed: false,
           description: 'Active task',
           createdTime: "17",
         },
@@ -40,12 +40,27 @@ class App extends React.Component {
     )
   }
 
+  toggleCompeted = (id) =>{
+    this.setState(({items}) => {
+      return {
+        items: items.map(el=>{
+          if (el.id !== id) return el;
+
+          return{
+            ...el,
+            completed: !el.completed
+          }
+        })
+      }
+    })
+  }
+
   render(){
     return  (
       <section className="todoapp">
           <NewTaskForm/>
           <section className="main">
-              <TaskList items={this.state.items} deleteTaskHandler={this.deleteTask}/>
+              <TaskList items={this.state.items} deleteTaskHandler={this.deleteTask} toggleCompeletedHandler={this.toggleCompeted}/>
               <Footer/>
           </section>
       </section>

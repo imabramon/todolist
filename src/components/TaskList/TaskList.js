@@ -4,11 +4,16 @@ import './TaskList.css'
 import Task from '../Task/'
 
 
-const TodoList = ({items, deleteTaskHandler})=>{
+const TodoList = ({items, deleteTaskHandler, toggleCompeletedHandler})=>{
   const tasks = items.map((item)=>{
-    // const {id, ...itemProps} = item
+    const {id, ...itemProps} = item
     return (
-      <Task key={item.id} {...item} deleteTaskHandler={deleteTaskHandler}/>
+      <Task 
+        key={item.id} 
+        onDeleted={()=>{deleteTaskHandler(id)}} 
+        onToggleCompeleted={()=>{toggleCompeletedHandler(id)}}
+        {...itemProps} 
+      />
     )
   })
 
