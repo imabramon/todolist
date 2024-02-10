@@ -12,7 +12,7 @@ class App extends React.Component {
   constructor(){
     super()
     this.state = {
-      currentView: 'active',
+      currentView: 'all',
       items: [
         this.makeTask('Make react app', true),
         this.makeTask('buy snus'),
@@ -77,7 +77,15 @@ class App extends React.Component {
     })
   }
 
+  deleteCompleted = () =>{
+    this.setState(({items})=>({
+      items: items.filter(({completed})=>!completed)
+    }))
+  }
+
   render(){
+    const uncomletedCount = this.state.items.filter(({completed})=>!completed).length
+
     return  (
       <section className="todoapp">
           <NewTaskForm addTaskHandler={this.addTask}/>
@@ -87,7 +95,9 @@ class App extends React.Component {
                 deleteTaskHandler={this.deleteTask} 
                 toggleCompeletedHandler={this.toggleCompeted}/>
               <Footer
+                uncomletedCount = {uncomletedCount}
                 filterState={this.state.currentView}
+                deleteCompletedHandler={this.deleteCompleted}
                 changeFilterHandler={this.changeView}/>
           </section>
       </section>

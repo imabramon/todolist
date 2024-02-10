@@ -34,13 +34,13 @@ class TasksFilter extends React.Component {
       const className = isSelected ? 'selected' : '';
       return (
         <li key={id}>
-          <button class={className}>{name}</button>
+          <button className={className}>{name}</button>
       </li>
       )
     })
 
       return (
-          <ul class="filters" onClick={this.onClick}>
+          <ul className="filters" onClick={this.onClick}>
             {buttons}
           </ul>
       )
