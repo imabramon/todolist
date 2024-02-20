@@ -12,67 +12,67 @@ class App extends React.Component {
       currentView: 'all',
       items: [this.makeTask('Make react app', true), this.makeTask('buy snus'), this.makeTask('go to shop')],
     }
+  }
 
-    this.maxID = 0
+  maxID = 0
 
-    this.deleteTask = (deleteId) => {
-      this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
+  deleteTask = (deleteId) => {
+    this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
+  }
+
+  makeTask = (description, completed) => {
+    if (!completed) completed = false
+    return {
+      id: this.maxID++,
+      completed,
+      description,
+      createdTime: 0,
     }
+  }
 
-    this.makeTask = (description, completed) => {
-      if (!completed) completed = false
+  getItems = () => {
+    // Сомнительно, но окей
+    switch (this.state.currentView) {
+      case 'completed': {
+        return this.state.items.filter(({ completed }) => completed)
+      }
+      case 'active': {
+        return this.state.items.filter(({ completed }) => !completed)
+      }
+      default:
+        return this.state.items
+    }
+  }
+
+  changeView = (view) => {
+    this.setState({
+      currentView: view,
+    })
+  }
+
+  addTask = (description) => {
+    this.setState(({ items }) => ({ items: [...items, this.makeTask(description)] }))
+  }
+
+  toggleCompeted = (id) => {
+    this.setState(({ items }) => {
       return {
-        id: this.maxID++,
-        completed,
-        description,
-        createdTime: 0,
+        items: items.map((el) => {
+          if (el.id !== id) return el
+
+          return {
+            ...el,
+            completed: !el.completed,
+          }
+        }),
       }
-    }
+    })
+  }
 
-    this.getItems = () => {
-      // Сомнительно, но окей
-      switch (this.state.currentView) {
-        case 'completed': {
-          return this.state.items.filter(({ completed }) => completed)
-        }
-        case 'active': {
-          return this.state.items.filter(({ completed }) => !completed)
-        }
-        default:
-          return this.state.items
-      }
-    }
-
-    this.changeView = (view) => {
-      this.setState({
-        currentView: view,
-      })
-    }
-
-    this.addTask = (description) => {
-      this.setState(({ items }) => ({ items: [...items, this.makeTask(description)] }))
-    }
-
-    this.toggleCompeted = (id) => {
-      this.setState(({ items }) => {
-        return {
-          items: items.map((el) => {
-            if (el.id !== id) return el
-
-            return {
-              ...el,
-              completed: !el.completed,
-            }
-          }),
-        }
-      })
-    }
-
-    this.deleteCompleted = () => {
-      this.setState(({ items }) => ({
-        items: items.filter(({ completed }) => !completed),
-      }))
-    }
+  deleteCompleted = () => {
+    this.setState(({ items }) => ({
+      items: items.filter(({ completed }) => !completed),
+    }))
   }
 
   render() {
