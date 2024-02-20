@@ -1,105 +1,99 @@
-import React from "react";
+import React from 'react'
 import './App.css'
 
 import TaskList from '../TaskList'
-import NewTaskForm from "../NewTaskForm";
-import Footer from "../Footer";
-
+import NewTaskForm from '../NewTaskForm'
+import Footer from '../Footer'
 
 class App extends React.Component {
-  maxID = 0;
-
-  constructor(){
+  constructor() {
     super()
     this.state = {
       currentView: 'all',
-      items: [
-        this.makeTask('Make react app', true),
-        this.makeTask('buy snus'),
-        this.makeTask('go to shop')
-      ]
+      items: [this.makeTask('Make react app', true), this.makeTask('buy snus'), this.makeTask('go to shop')],
     }
-  }
 
-  deleteTask = (deleteId) =>{
+    this.maxID = 0
 
-    this.setState(
-      ({items})=>({items: items.filter(({id})=>id !== deleteId)})
-    )
-  }
-
-  makeTask = (description, completed)=>{
-    if(!completed) completed = false;
-    return {
-      id: this.maxID++,
-      completed,
-      description,
-      createdTime: 0,
+    this.deleteTask = (deleteId) => {
+      this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
     }
-  }
 
-  getItems = ()=>{
-    //Сомнительно, но окей
-    switch(this.state.currentView){
-      case 'completed':{
-        return this.state.items.filter(({completed})=>completed)
-      }
-      case 'active':{
-        return this.state.items.filter(({completed})=>!completed)
-      }
-      default:
-        return this.state.items
-    }
-  }
-
-  changeView = (view)=>{
-    this.setState({
-      currentView: view
-    })
-  }
-
-  addTask = (description)=>{
-    this.setState(({items})=>({items: [...items, this.makeTask(description)]}))
-  }
-
-  toggleCompeted = (id) =>{
-    this.setState(({items}) => {
+    this.makeTask = (description, completed) => {
+      if (!completed) completed = false
       return {
-        items: items.map(el=>{
-          if (el.id !== id) return el;
-
-          return{
-            ...el,
-            completed: !el.completed
-          }
-        })
+        id: this.maxID++,
+        completed,
+        description,
+        createdTime: 0,
       }
-    })
+    }
+
+    this.getItems = () => {
+      // Сомнительно, но окей
+      switch (this.state.currentView) {
+        case 'completed': {
+          return this.state.items.filter(({ completed }) => completed)
+        }
+        case 'active': {
+          return this.state.items.filter(({ completed }) => !completed)
+        }
+        default:
+          return this.state.items
+      }
+    }
+
+    this.changeView = (view) => {
+      this.setState({
+        currentView: view,
+      })
+    }
+
+    this.addTask = (description) => {
+      this.setState(({ items }) => ({ items: [...items, this.makeTask(description)] }))
+    }
+
+    this.toggleCompeted = (id) => {
+      this.setState(({ items }) => {
+        return {
+          items: items.map((el) => {
+            if (el.id !== id) return el
+
+            return {
+              ...el,
+              completed: !el.completed,
+            }
+          }),
+        }
+      })
+    }
+
+    this.deleteCompleted = () => {
+      this.setState(({ items }) => ({
+        items: items.filter(({ completed }) => !completed),
+      }))
+    }
   }
 
-  deleteCompleted = () =>{
-    this.setState(({items})=>({
-      items: items.filter(({completed})=>!completed)
-    }))
-  }
+  render() {
+    const uncomletedCount = this.state.items.filter(({ completed }) => !completed).length
 
-  render(){
-    const uncomletedCount = this.state.items.filter(({completed})=>!completed).length
-
-    return  (
+    return (
       <section className="todoapp">
-          <NewTaskForm addTaskHandler={this.addTask}/>
-          <section className="main">
-              <TaskList 
-                items={this.getItems()} 
-                deleteTaskHandler={this.deleteTask} 
-                toggleCompeletedHandler={this.toggleCompeted}/>
-              <Footer
-                uncomletedCount = {uncomletedCount}
-                filterState={this.state.currentView}
-                deleteCompletedHandler={this.deleteCompleted}
-                changeFilterHandler={this.changeView}/>
-          </section>
+        <NewTaskForm addTaskHandler={this.addTask} />
+        <section className="main">
+          <TaskList
+            items={this.getItems()}
+            deleteTaskHandler={this.deleteTask}
+            toggleCompeletedHandler={this.toggleCompeted}
+          />
+          <Footer
+            uncomletedCount={uncomletedCount}
+            filterState={this.state.currentView}
+            deleteCompletedHandler={this.deleteCompleted}
+            changeFilterHandler={this.changeView}
+          />
+        </section>
       </section>
     )
   }
@@ -109,26 +103,25 @@ class App extends React.Component {
 //   {
 //     const items = [
 //       {
-//         id: 1, 
+//         id: 1,
 //         taskType: 'completed',
 //         description: 'Completed task',
 //         createdTime: "17",
 //       },
 //       {
-//         id: 2, 
+//         id: 2,
 //         taskType: 'editing',
 //         description: 'Editing task',
 //         createdTime: "5",
 //       },
 //       {
-//         id: 3, 
+//         id: 3,
 //         taskType: '',
 //         description: 'Active task',
 //         createdTime: "17",
 //       },
 //     ]
 
-    
 // }
 
-export default App;
+export default App

@@ -1,50 +1,44 @@
-import React from "react";
+import React from 'react'
 import './TasksFilter.css'
 
 class TasksFilter extends React.Component {
-
   state = {
-    selectedButton: this.props.filterState
+    selectedButton: this.props.filterState,
   }
 
-  maxId = 0;
+  maxId = 0
 
-  onClick = (e)=>{
+  onClick = (e) => {
     const stateName = e.target.innerHTML.toLowerCase()
     // console.log(stateName)
-    this.setState({selectedButton: stateName})
-    const {changeFilterHandler} = this.props;
+    this.setState({ selectedButton: stateName })
+    const { changeFilterHandler } = this.props
     changeFilterHandler(stateName)
   }
 
-  makeButton = (name) =>({
+  makeButton = (name) => ({
     id: this.maxId++,
-    name
+    name,
   })
 
-  render(){
-
-    const buttonNames = [
-      this.makeButton('All'),
-      this.makeButton('Active'),
-      this.makeButton('Completed')
-    ]
-    const buttons = buttonNames.map(({id, name})=>{
+  render() {
+    const buttonNames = [this.makeButton('All'), this.makeButton('Active'), this.makeButton('Completed')]
+    const buttons = buttonNames.map(({ id, name }) => {
       const isSelected = name.toLowerCase() === this.state.selectedButton
-      const className = isSelected ? 'selected' : '';
+      const className = isSelected ? 'selected' : ''
       return (
         <li key={id}>
           <button className={className}>{name}</button>
-      </li>
+        </li>
       )
     })
 
-      return (
-          <ul className="filters" onClick={this.onClick}>
-            {buttons}
-          </ul>
-      )
+    return (
+      <ul className="filters" onClick={this.onClick}>
+        {buttons}
+      </ul>
+    )
   }
 }
 
-export default TasksFilter;
+export default TasksFilter
