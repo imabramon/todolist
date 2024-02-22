@@ -12,7 +12,11 @@ class App extends React.Component {
     super()
     this.state = {
       currentView: 'all',
-      items: [this.makeTask('Make react app', true), this.makeTask('buy snus'), this.makeTask('go to shop')],
+      items: [
+        this.makeTask('Make react app', new Date('2024-02-17T03:24:00'), true),
+        this.makeTask('buy snus', new Date('2024-02-17T03:24:00')),
+        this.makeTask('go to shop', new Date('2024-02-17T03:24:00')),
+      ],
     }
   }
 
@@ -20,12 +24,12 @@ class App extends React.Component {
     this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
   }
 
-  makeTask = (description, completed = false) => {
+  makeTask = (description, createdTime, completed = false) => {
     return {
       id: this.maxID++,
       completed,
       description,
-      createdTime: 0,
+      createdTime,
     }
   }
 
@@ -52,7 +56,7 @@ class App extends React.Component {
   }
 
   addTask = (description) => {
-    this.setState(({ items }) => ({ items: [...items, this.makeTask(description)] }))
+    this.setState(({ items }) => ({ items: [...items, this.makeTask(description, new Date())] }))
   }
 
   toggleCompeted = (id) => {

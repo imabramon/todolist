@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatDistanceToNow } from 'date-fns'
 import './Task.css'
 
 function Task(props) {
@@ -11,7 +12,7 @@ function Task(props) {
         <input className="toggle" type="checkbox" checked={completed} onChange={onToggleCompeleted} />
         <label>
           <span className="description">{description}</span>
-          <span className="created">created {createdTime} seconds ago</span>
+          <span className="created">{`${formatDistanceToNow(createdTime)} ago`}</span>
         </label>
         <button type="button" className="icon icon-edit" />
         <button type="button" className="icon icon-destroy" onClick={onDeleted} />
