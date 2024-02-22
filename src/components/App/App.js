@@ -6,6 +6,8 @@ import NewTaskForm from '../NewTaskForm'
 import Footer from '../Footer'
 
 class App extends React.Component {
+  maxID = 0
+
   constructor() {
     super()
     this.state = {
@@ -14,14 +16,11 @@ class App extends React.Component {
     }
   }
 
-  maxID = 0
-
   deleteTask = (deleteId) => {
     this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
   }
 
-  makeTask = (description, completed) => {
-    if (!completed) completed = false
+  makeTask = (description, completed = false) => {
     return {
       id: this.maxID++,
       completed,
@@ -32,15 +31,17 @@ class App extends React.Component {
 
   getItems = () => {
     // Сомнительно, но окей
-    switch (this.state.currentView) {
+
+    const { currentView, items } = this.state
+    switch (currentView) {
       case 'completed': {
-        return this.state.items.filter(({ completed }) => completed)
+        return items.filter(({ completed }) => completed)
       }
       case 'active': {
-        return this.state.items.filter(({ completed }) => !completed)
+        return items.filter(({ completed }) => !completed)
       }
       default:
-        return this.state.items
+        return items
     }
   }
 
@@ -76,7 +77,8 @@ class App extends React.Component {
   }
 
   render() {
-    const uncomletedCount = this.state.items.filter(({ completed }) => !completed).length
+    const { items, currentView } = this.state
+    const uncomletedCount = items.filter(({ completed }) => !completed).length
 
     return (
       <section className="todoapp">
@@ -89,7 +91,7 @@ class App extends React.Component {
           />
           <Footer
             uncomletedCount={uncomletedCount}
-            filterState={this.state.currentView}
+            filterState={currentView}
             deleteCompletedHandler={this.deleteCompleted}
             changeFilterHandler={this.changeView}
           />

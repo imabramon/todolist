@@ -5,6 +5,7 @@
   },
   "ignorePatterns": ["node_modules", "dist", "build"],
   "extends": [
+    "airbnb",
     "eslint:recommended",
     "plugin:react/recommended",
     "prettier",
@@ -37,7 +38,14 @@
         "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
         "newlines-between": "always"
       }
-    ]
+    ],
+    "import/extensions": "off",
+    "no-plusplus": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/label-has-associated-control": "off"
   },
   "settings": {
     "import/resolver": {

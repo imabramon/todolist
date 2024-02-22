@@ -2,11 +2,15 @@ import React from 'react'
 import './TasksFilter.css'
 
 class TasksFilter extends React.Component {
-  state = {
-    selectedButton: this.props.filterState,
-  }
-
   maxId = 0
+
+  constructor(props) {
+    super(props)
+    const { filterState } = this.props
+    this.state = {
+      selectedButton: filterState,
+    }
+  }
 
   onClick = (e) => {
     const stateName = e.target.innerHTML.toLowerCase()
@@ -22,13 +26,17 @@ class TasksFilter extends React.Component {
   })
 
   render() {
+    const { selectedButton } = this.state
+
     const buttonNames = [this.makeButton('All'), this.makeButton('Active'), this.makeButton('Completed')]
     const buttons = buttonNames.map(({ id, name }) => {
-      const isSelected = name.toLowerCase() === this.state.selectedButton
+      const isSelected = name.toLowerCase() === selectedButton
       const className = isSelected ? 'selected' : ''
       return (
         <li key={id}>
-          <button className={className}>{name}</button>
+          <button type="button" className={className}>
+            {name}
+          </button>
         </li>
       )
     })

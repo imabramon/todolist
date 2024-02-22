@@ -2,27 +2,31 @@ import React from 'react'
 import './NewTaskForm.css'
 
 class NewTaskForm extends React.Component {
-  state = {
-    currentInput: '',
+  constructor() {
+    super()
+    this.state = {
+      currentInput: '',
+    }
   }
 
   onChange = (e) => {
     this.setState({
       currentInput: e.target.value,
     })
-    console.log('on change')
   }
 
   onSubmit = (e) => {
+    const { currentInput } = this.state
     e.preventDefault()
     const { addTaskHandler } = this.props
-    addTaskHandler(this.state.currentInput)
+    addTaskHandler(currentInput)
     this.setState({
       currentInput: '',
     })
   }
 
   render() {
+    const { currentInput } = this.state
     return (
       <header className="header">
         <h1>todos</h1>
@@ -30,9 +34,8 @@ class NewTaskForm extends React.Component {
           <input
             className="new-todo"
             placeholder="What needs to be done?"
-            value={this.state.currentInput}
+            value={currentInput}
             onChange={this.onChange}
-            autoFocus
           />
         </form>
       </header>

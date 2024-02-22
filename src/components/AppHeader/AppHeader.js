@@ -1,7 +1,7 @@
 import React from 'react'
 import './AppHeader.css'
 
-const AppHeader = ({ todoCount, doneCount }) => {
+function AppHeader({ todoCount, doneCount }) {
   return (
     <div className="app-header d-flex">
       <h1>My Todo list</h1>

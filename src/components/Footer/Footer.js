@@ -3,13 +3,13 @@ import './Footer.css'
 
 import TasksFilter from '../TasksFilter'
 
-const Footer = (props) => {
+function Footer(props) {
   const { changeFilterHandler, filterState, deleteCompletedHandler, uncomletedCount } = props
   return (
     <footer className="footer">
       <span className="todo-count">{uncomletedCount} items left</span>
       <TasksFilter filterState={filterState} changeFilterHandler={changeFilterHandler} />
-      <button className="clear-completed" onClick={deleteCompletedHandler}>
+      <button type="button" className="clear-completed" onClick={deleteCompletedHandler}>
         Clear completed
       </button>
     </footer>

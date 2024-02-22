@@ -3,7 +3,7 @@ import './TaskList.css'
 
 import Task from '../Task'
 
-const TodoList = ({ items, deleteTaskHandler, toggleCompeletedHandler }) => {
+function TodoList({ items, deleteTaskHandler, toggleCompeletedHandler }) {
   const tasks = items.map((item) => {
     const { id, ...itemProps } = item
     return (
