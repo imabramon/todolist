@@ -8,7 +8,7 @@ function Task(props) {
   return (
     <li className={itemClassNames}>
       <div className="view">
-        <input className="toggle" type="checkbox" checked={completed} onClick={onToggleCompeleted} />
+        <input className="toggle" type="checkbox" checked={completed} onChange={onToggleCompeleted} />
         <label>
           <span className="description">{description}</span>
           <span className="created">created {createdTime} seconds ago</span>
