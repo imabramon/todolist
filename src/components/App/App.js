@@ -24,12 +24,28 @@ class App extends React.Component {
     this.setState(({ items }) => ({ items: items.filter(({ id }) => id !== deleteId) }))
   }
 
+  updateTaskTime = (id, newTime, isTimerRun) => {
+    this.setState(({ items }) => ({
+      items: items.reduce((acc, curr) => {
+        if (curr.id !== id) return [...acc, curr]
+        const newObj = { ...curr, time: newTime, isTimerRun }
+
+        if (isTimerRun) {
+          newObj.timerPseudoStopDate = Date.now()
+        }
+        return [...acc, newObj]
+      }, []),
+    }))
+  }
+
   makeTask = (description, createdTime, completed = false) => {
     return {
       id: this.maxID++,
       completed,
       description,
       createdTime,
+      time: 0,
+      isTimerRun: false,
     }
   }
 
@@ -92,6 +108,7 @@ class App extends React.Component {
             items={this.getItems()}
             deleteTaskHandler={this.deleteTask}
             toggleCompeletedHandler={this.toggleCompeted}
+            updateTimeHandler={this.updateTaskTime}
           />
           <Footer
             uncomletedCount={uncomletedCount}

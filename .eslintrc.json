@@ -32,6 +32,7 @@
     "react/prop-types": 0,
     "import/no-unresolved": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/state-in-constructor": "off",
     "import/order": [
       2,
       {

@@ -3,7 +3,7 @@ import './TaskList.css'
 
 import Task from '../Task'
 
-function TodoList({ items, deleteTaskHandler, toggleCompeletedHandler }) {
+function TodoList({ items, deleteTaskHandler, toggleCompeletedHandler, updateTimeHandler }) {
   const tasks = items.map((item) => {
     const { id, ...itemProps } = item
     return (
@@ -14,6 +14,9 @@ function TodoList({ items, deleteTaskHandler, toggleCompeletedHandler }) {
         }}
         onToggleCompeleted={() => {
           toggleCompeletedHandler(id)
+        }}
+        onTimeUpdate={(newTime, isTimerRun) => {
+          updateTimeHandler(id, newTime, isTimerRun)
         }}
         {...itemProps}
       />
