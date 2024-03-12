@@ -5,12 +5,11 @@ import TaskList from '../TaskList'
 import NewTaskForm from '../NewTaskForm'
 import Footer from '../Footer'
 
-const changeById = (arr, id, callback) => {
-  return arr.reduce((acc, curr) => {
+const changeById = (arr, id, callback) =>
+  arr.reduce((acc, curr) => {
     if (curr.id !== id) return [...acc, curr]
     return [...acc, callback(curr)]
   }, [])
-}
 
 class App extends React.Component {
   maxID = 0
@@ -51,16 +50,14 @@ class App extends React.Component {
     }))
   }
 
-  makeTask = (description, createdTime, time = 0, completed = false) => {
-    return {
-      id: this.maxID++,
-      completed,
-      description,
-      createdTime,
-      time,
-      isTimerRun: false,
-    }
-  }
+  makeTask = (description, createdTime, time = 0, completed = false) => ({
+    id: this.maxID++,
+    completed,
+    description,
+    createdTime,
+    time,
+    isTimerRun: false,
+  })
 
   getItems = () => {
     // Сомнительно, но окей
@@ -91,18 +88,16 @@ class App extends React.Component {
   }
 
   toggleCompeted = (id) => {
-    this.setState(({ items }) => {
-      return {
-        items: items.map((el) => {
-          if (el.id !== id) return el
+    this.setState(({ items }) => ({
+      items: items.map((el) => {
+        if (el.id !== id) return el
 
-          return {
-            ...el,
-            completed: !el.completed,
-          }
-        }),
-      }
-    })
+        return {
+          ...el,
+          completed: !el.completed,
+        }
+      }),
+    }))
   }
 
   deleteCompleted = () => {

@@ -8,7 +8,7 @@
     "airbnb",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:prettier/recommended",
+
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
@@ -23,7 +23,6 @@
   "plugins": ["react", "import"],
   "rules": {
     "indent": "off",
-    "prettier/prettier": "error",
     "linebreak-style": [0, "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],

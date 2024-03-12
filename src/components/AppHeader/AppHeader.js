@@ -6,7 +6,8 @@ function AppHeader({ todoCount, doneCount }) {
     <div className="app-header d-flex">
       <h1>My Todo list</h1>
       <h2>
-        {todoCount} more to do, {doneCount} done
+        {todoCount} more to do,
+        {doneCount} done
       </h2>
     </div>
   )
