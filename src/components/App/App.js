@@ -5,6 +5,13 @@ import TaskList from '../TaskList'
 import NewTaskForm from '../NewTaskForm'
 import Footer from '../Footer'
 
+const changeById = (arr, id, callback) => {
+  return arr.reduce((acc, curr) => {
+    if (curr.id !== id) return [...acc, curr]
+    return [...acc, callback(curr)]
+  }, [])
+}
+
 class App extends React.Component {
   maxID = 0
 
@@ -13,7 +20,7 @@ class App extends React.Component {
     this.state = {
       currentView: 'all',
       items: [
-        this.makeTask('Make react app', new Date('2024-02-17T03:24:00'), true),
+        this.makeTask('Make react app', new Date('2024-02-17T03:24:00'), 0, true),
         this.makeTask('buy snus', new Date('2024-02-17T03:24:00')),
         this.makeTask('go to shop', new Date('2024-02-17T03:24:00')),
       ],
@@ -38,13 +45,19 @@ class App extends React.Component {
     }))
   }
 
-  makeTask = (description, createdTime, completed = false) => {
+  updateTaskTitle = (id, newTitle) => {
+    this.setState(({ items }) => ({
+      items: changeById(items, id, (item) => ({ ...item, description: newTitle })),
+    }))
+  }
+
+  makeTask = (description, createdTime, time = 0, completed = false) => {
     return {
       id: this.maxID++,
       completed,
       description,
       createdTime,
-      time: 0,
+      time,
       isTimerRun: false,
     }
   }
@@ -71,8 +84,10 @@ class App extends React.Component {
     })
   }
 
-  addTask = (description) => {
-    this.setState(({ items }) => ({ items: [...items, this.makeTask(description, new Date())] }))
+  addTask = (description, min, sec) => {
+    this.setState(({ items }) => ({
+      items: [...items, this.makeTask(description, new Date(), min * 60 + sec)],
+    }))
   }
 
   toggleCompeted = (id) => {
@@ -109,6 +124,7 @@ class App extends React.Component {
             deleteTaskHandler={this.deleteTask}
             toggleCompeletedHandler={this.toggleCompeted}
             updateTimeHandler={this.updateTaskTime}
+            updateTaskTitleHandler={this.updateTaskTitle}
           />
           <Footer
             uncomletedCount={uncomletedCount}

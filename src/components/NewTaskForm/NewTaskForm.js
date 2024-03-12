@@ -1,41 +1,95 @@
 import React from 'react'
 import './NewTaskForm.css'
 
+const defaultState = {
+  currentInput: '',
+  currentMin: '',
+  currentSec: '',
+}
+
 class NewTaskForm extends React.Component {
   constructor() {
     super()
-    this.state = {
-      currentInput: '',
-    }
+    this.state = { ...defaultState }
   }
 
-  onChange = (e) => {
+  onInputChange = (e) => {
+    this.setStateByValue('currentInput', e)
+  }
+
+  onMinChange = (e) => {
+    this.setStateByValue('currentMin', e)
+  }
+
+  onSecChange = (e) => {
+    this.setStateByValue('currentSec', e)
+  }
+
+  setStateByValue = (name, e) => {
     this.setState({
-      currentInput: e.target.value,
+      [name]: e.target.value,
     })
   }
 
   onSubmit = (e) => {
-    const { currentInput } = this.state
     e.preventDefault()
+
+    const { currentInput } = this.state
+    let { currentMin, currentSec } = this.state
+
+    if (currentMin === '') {
+      currentMin = 0
+    } else {
+      currentMin = Number(currentMin)
+    }
+    if (currentSec === '') {
+      currentSec = 0
+    } else {
+      currentSec = Number(currentSec)
+    }
+
     const { addTaskHandler } = this.props
-    addTaskHandler(currentInput)
-    this.setState({
-      currentInput: '',
-    })
+    addTaskHandler(currentInput, currentMin, currentSec)
+    this.setState({ ...defaultState })
+  }
+
+  onKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.onSubmit(e)
+    }
   }
 
   render() {
-    const { currentInput } = this.state
+    const { currentInput, currentMin, currentSec } = this.state
     return (
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={this.onSubmit}>
+        <form
+          onSubmit={this.onSubmit}
+          className="new-todo-form"
+          name="todo-form"
+          onKeyDown={this.onKeyDown} //
+        >
           <input
             className="new-todo"
             placeholder="What needs to be done?"
             value={currentInput}
-            onChange={this.onChange}
+            onChange={this.onInputChange}
+            form="todo-form"
+          />
+          <input
+            className="new-todo-form__timer"
+            placeholder="Min"
+            value={currentMin}
+            onChange={this.onMinChange}
+            form="todo-form"
+          />
+          <input
+            className="new-todo-form__timer"
+            placeholder="Sec"
+            value={currentSec}
+            onChange={this.onSecChange}
+            form="todo-form"
           />
         </form>
       </header>
