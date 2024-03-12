@@ -8,7 +8,6 @@
     "airbnb",
     "eslint:recommended",
     "plugin:react/recommended",
-    "prettier",
     "plugin:prettier/recommended",
     "plugin:import/errors",
     "plugin:import/warnings"
