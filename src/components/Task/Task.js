@@ -107,7 +107,9 @@ class Task extends React.Component {
           className="edit"
           value={title}
           onChange={this.onTitleChange}
-          // onKeyDown={(e) => e.key === 'Enter' && this.onToggleEditingMode()}
+          onBlur={this.onToggleEditingMode}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
         />
       </form>
     ) : null
