@@ -43,11 +43,12 @@ class Task extends React.Component {
   }
 
   componentWillUnmount() {
-    const { onTimeUpdate } = this.props
-    const { time: newTime } = this.state
+    const { onTimeUpdate, onTaskTitleUpdate } = this.props
+    const { time: newTime, title } = this.state
     const { isTimerRun } = this
     this.timerStop()
     onTimeUpdate(newTime, isTimerRun)
+    onTaskTitleUpdate(title)
   }
 
   makeTick = () => {
