@@ -49,7 +49,8 @@
     "react/jsx-one-expression-per-line": "off",
     "object-curly-newline": "off",
     "max-len": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "operator-linebreak": "off"
   },
   "settings": {
     "import/resolver": {

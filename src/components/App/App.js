@@ -89,7 +89,6 @@ const tasksInitState = [
 
 function App() {
   const [tasks, tasksDispathcer] = useReducer(taskReducer, tasksInitState)
-
   const makeTaskDispathcer =
     (actionType) =>
     (...args) =>
