@@ -12,6 +12,13 @@ const changeById = (arr, id, callback) =>
     return [...acc, callback(curr)]
   }, [])
 
+const logger =
+  (callback) =>
+  (...args) => {
+    console.log(`${callback} calls with args`, ...args)
+    return callback(...args)
+  }
+
 class App1 extends React.Component {
   maxID = 0
 
@@ -151,6 +158,7 @@ const TaskActionTypes = {
   updateTaskTime: 'updateTaskTime',
   updateTaskTitle: 'updateTaskTitle',
   add: 'add',
+  deleteCompleted: 'deleteCompleted',
 }
 
 const addTask = (description, min, sec) => {
@@ -180,6 +188,35 @@ const deleteCompleted = () => {
 
 const taskReducer = (state, action) => {
   switch (action.type) {
+    case TaskActionTypes.delete: {
+      const [id] = action.payload
+      console.log('delete task', id)
+      return state
+    }
+    case TaskActionTypes.toggleCompeted: {
+      const [id] = action.payload
+      console.log('toggle task', id)
+      return state
+    }
+    case TaskActionTypes.updateTaskTime: {
+      const [id, newTime, isTimerRun] = action.payload
+      console.log(`update task[${id} to new time ${newTime}. Timer is running: ${isTimerRun}`)
+      return state
+    }
+    case TaskActionTypes.updateTaskTitle: {
+      const [id, newTitle] = action.payload
+      console.log(`update task[${id} to new title ${newTitle}`)
+      return state
+    }
+    case TaskActionTypes.add: {
+      const [title, min, sec] = action.payload
+      console.log(`add task with ${title} and time ${min}:${sec}`)
+      return state
+    }
+    case TaskActionTypes.deleteCompleted: {
+      console.log(`delete all completed`)
+      return state
+    }
     default:
       return state
   }
@@ -199,38 +236,28 @@ const ViewTypes = {
   active: 'active',
 }
 
+const tasksInitState = [
+  makeTask('Make react app', new Date('2024-02-17T03:24:00'), 0, true),
+  makeTask('buy snus', new Date('2024-02-17T03:24:00')),
+  makeTask('go to shop', new Date('2024-02-17T03:24:00')),
+]
+
 const App = (props) => {
-  const [tasks, tasksDispathcer] = useReducer(taskReducer, [
-    makeTask('Make react app', new Date('2024-02-17T03:24:00'), 0, true),
-    makeTask('buy snus', new Date('2024-02-17T03:24:00')),
-    makeTask('go to shop', new Date('2024-02-17T03:24:00')),
-  ])
+  const [tasks, tasksDispathcer] = useReducer(taskReducer, tasksInitState)
 
-  const addTask = (title, min, sec) => {
-    console.log(`add task with ${title} and time ${min}:${sec}`)
-  }
+  const makeTaskDispathcer =
+    (actionType) =>
+    (...args) =>
+      tasksDispathcer({ type: actionType, payload: [...args] })
 
-  const deleteTask = (id) => {
-    console.log('delete task', id)
-  }
-
-  const toggleCompeted = (id) => {
-    console.log('toggle task', id)
-  }
-
-  const updateTaskTime = (id, newTime, isTimerRun) => {
-    console.log(`update task[${id} to new time ${newTime}. Timer is running: ${isTimerRun}`)
-  }
-
-  const updateTaskTitle = (id, newTitle) => {
-    console.log(`update task[${id} to new title ${newTitle}`)
-  }
+  const addTask = makeTaskDispathcer(TaskActionTypes.add)
+  const deleteTask = makeTaskDispathcer(TaskActionTypes.delete)
+  const toggleCompeted = makeTaskDispathcer(TaskActionTypes.toggleCompeted)
+  const updateTaskTime = makeTaskDispathcer(TaskActionTypes.updateTaskTime)
+  const updateTaskTitle = makeTaskDispathcer(TaskActionTypes.updateTaskTitle)
+  const deleteCompleted = makeTaskDispathcer(TaskActionTypes.deleteCompleted)
 
   const uncomletedCount = (() => 2)(tasks)
-
-  const deleteCompleted = () => {
-    console.log(`delete all completed`)
-  }
 
   const [currentView, setCurrentView] = useState(ViewTypes.all)
 
