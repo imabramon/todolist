@@ -241,20 +241,29 @@ const App = (props) => {
   const updateTaskTitle = makeTaskDispathcer(TaskActionTypes.updateTaskTitle)
   const deleteCompleted = makeTaskDispathcer(TaskActionTypes.deleteCompleted)
 
-  const uncomletedCount = (() => 2)(tasks)
+  const uncomletedCount = tasks.filter(({ completed }) => !completed).length
 
-  const [currentView, setCurrentView] = useState(ViewTypes.all)
+  const [currentView, changeView] = useState(ViewTypes.all)
 
-  const changeView = (newView) => {
-    console.log(`new view is ${newView}`)
-  }
+  const renderTasks = ((items, currentView) => {
+    switch (currentView) {
+      case 'completed': {
+        return items.filter(({ completed }) => completed)
+      }
+      case 'active': {
+        return items.filter(({ completed }) => !completed)
+      }
+      default:
+        return items
+    }
+  })(tasks, currentView)
 
   return (
     <section className="todoapp">
       <NewTaskForm addTaskHandler={addTask} />
       <section className="main">
         <TaskList
-          items={tasks}
+          items={renderTasks}
           deleteTaskHandler={deleteTask}
           toggleCompeletedHandler={toggleCompeted}
           updateTimeHandler={updateTaskTime}
