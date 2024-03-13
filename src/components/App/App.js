@@ -161,61 +161,75 @@ const TaskActionTypes = {
   deleteCompleted: 'deleteCompleted',
 }
 
-const addTask = (description, min, sec) => {
-  this.setState(({ items }) => ({
-    items: [...items, this.makeTask(description, new Date(), min * 60 + sec)],
-  }))
-}
+// const TaskActions = {
+//   TaskActionTypes.delete: 'delete',
+//   TaskActionTypes.toggleCompeted: 'toggleCompeted',
+//   TaskActionTypes.updateTaskTime: 'updateTaskTime',
+//   TaskActionTypes.updateTaskTitle: 'updateTaskTitle',
+//   TaskActionTypes.add: 'add',
+//   TaskActionTypes.deleteCompleted: 'deleteCompleted',
+// }
 
-const toggleCompeted = (id) => {
-  this.setState(({ items }) => ({
-    items: items.map((el) => {
-      if (el.id !== id) return el
+const addTask = (items, description, min, sec) => [...items, makeTask(description, new Date(), min * 60 + sec)]
 
-      return {
-        ...el,
-        completed: !el.completed,
-      }
-    }),
-  }))
-}
+const toggleCompeted = (items, id) =>
+  items.map((el) => {
+    if (el.id !== id) return el
 
-const deleteCompleted = () => {
-  this.setState(({ items }) => ({
-    items: items.filter(({ completed }) => !completed),
-  }))
-}
+    return {
+      ...el,
+      completed: !el.completed,
+    }
+  })
+
+const deleteCompleted = (items) => items.filter(({ completed }) => !completed)
+
+const deleteTask = (items, deleteId) => items.filter(({ id }) => id !== deleteId)
+
+const updateTaskTime = logger((items, id, newTime, isTimerRun) =>
+  items.reduce((acc, curr) => {
+    if (curr.id !== id) return [...acc, curr]
+    const newObj = { ...curr, time: newTime, isTimerRun }
+
+    if (isTimerRun) {
+      newObj.timerPseudoStopDate = Date.now()
+    }
+    return [...acc, newObj]
+  }, [])
+)
+
+const updateTaskTitle = (items, id, newTitle) => changeById(items, id, (item) => ({ ...item, description: newTitle }))
 
 const taskReducer = (state, action) => {
   switch (action.type) {
     case TaskActionTypes.delete: {
       const [id] = action.payload
       console.log('delete task', id)
-      return state
+      return deleteTask(state, ...action.payload)
     }
     case TaskActionTypes.toggleCompeted: {
       const [id] = action.payload
       console.log('toggle task', id)
-      return state
+      return toggleCompeted(state, ...action.payload)
     }
     case TaskActionTypes.updateTaskTime: {
       const [id, newTime, isTimerRun] = action.payload
       console.log(`update task[${id} to new time ${newTime}. Timer is running: ${isTimerRun}`)
-      return state
+      return updateTaskTime(state, ...action.payload)
     }
     case TaskActionTypes.updateTaskTitle: {
       const [id, newTitle] = action.payload
       console.log(`update task[${id} to new title ${newTitle}`)
-      return state
+      return updateTaskTitle(state, ...action.payload)
     }
     case TaskActionTypes.add: {
       const [title, min, sec] = action.payload
       console.log(`add task with ${title} and time ${min}:${sec}`)
-      return state
+      return addTask(state, ...action.payload)
     }
     case TaskActionTypes.deleteCompleted: {
       console.log(`delete all completed`)
-      return state
+      return deleteCompleted(state)
     }
     default:
       return state
