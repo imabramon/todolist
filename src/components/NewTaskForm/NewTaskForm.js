@@ -1,100 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './NewTaskForm.css'
 
-const defaultState = {
-  currentInput: '',
-  currentMin: '',
-  currentSec: '',
+const useInput = (value) => {
+  const [state, setState] = useState(value)
+  const onChange = (e) => {
+    setState(e.target.value)
+  }
+  const clear = () => {
+    setState(value)
+  }
+  return [state, onChange, clear]
 }
 
-class NewTaskForm extends React.Component {
-  constructor() {
-    super()
-    this.state = { ...defaultState }
+function NewTaskForm({ addTaskHandler }) {
+  const [input, setInput, clearInput] = useInput('')
+  const [min, setMin, clearMin] = useInput('')
+  const [sec, setSec, clearSec] = useInput('')
+
+  const clearAll = () => {
+    clearInput()
+    clearMin()
+    clearSec()
   }
 
-  onInputChange = (e) => {
-    this.setStateByValue('currentInput', e)
+  const emitTask = () => {
+    addTaskHandler(input, min, sec)
+    clearAll()
   }
 
-  onMinChange = (e) => {
-    this.setStateByValue('currentMin', e)
-  }
-
-  onSecChange = (e) => {
-    this.setStateByValue('currentSec', e)
-  }
-
-  setStateByValue = (name, e) => {
-    this.setState({
-      [name]: e.target.value,
-    })
-  }
-
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault()
-
-    const { currentInput } = this.state
-    let { currentMin, currentSec } = this.state
-
-    if (currentMin === '') {
-      currentMin = 0
-    } else {
-      currentMin = Number(currentMin)
-    }
-    if (currentSec === '') {
-      currentSec = 0
-    } else {
-      currentSec = Number(currentSec)
-    }
-
-    const { addTaskHandler } = this.props
-    addTaskHandler(currentInput, currentMin, currentSec)
-    this.setState({ ...defaultState })
+    emitTask()
   }
 
-  onKeyDown = (e) => {
+  const onKeyDown = (e) => {
     if (e.key === 'Enter') {
-      this.onSubmit(e)
+      emitTask()
     }
   }
 
-  render() {
-    const { currentInput, currentMin, currentSec } = this.state
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        <form
-          onSubmit={this.onSubmit}
-          className="new-todo-form"
-          name="todo-form"
-          onKeyDown={this.onKeyDown} //
-        >
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            value={currentInput}
-            onChange={this.onInputChange}
-            form="todo-form"
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Min"
-            value={currentMin}
-            onChange={this.onMinChange}
-            form="todo-form"
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            value={currentSec}
-            onChange={this.onSecChange}
-            form="todo-form"
-          />
-        </form>
-      </header>
-    )
-  }
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      <form
+        onSubmit={onSubmit}
+        className="new-todo-form"
+        name="todo-form"
+        onKeyDown={onKeyDown} //
+      >
+        <input className="new-todo" placeholder="What I've Done?" value={input} onChange={setInput} form="todo-form" />
+        <input className="new-todo-form__timer" placeholder="Min" value={min} onChange={setMin} form="todo-form" />
+        <input className="new-todo-form__timer" placeholder="Sec" value={sec} onChange={setSec} form="todo-form" />
+      </form>
+    </header>
+  )
 }
 
 export default NewTaskForm
