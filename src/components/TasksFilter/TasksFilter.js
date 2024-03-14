@@ -1,52 +1,41 @@
 import React from 'react'
 import './TasksFilter.css'
 
-class TasksFilter extends React.Component {
-  maxId = 0
+let maxId = 0
 
-  constructor(props) {
-    super(props)
-    const { filterState } = this.props
-    this.state = {
-      selectedButton: filterState,
-    }
-  }
+const makeButton = (name) => ({
+  id: maxId++,
+  name,
+})
 
-  onClick = (e) => {
+const buttonNames = [makeButton('All'), makeButton('Active'), makeButton('Completed')]
+
+function TasksFilter(props) {
+  const { filterState, changeFilterHandler } = props
+
+  const onClick = (e) => {
+    if (e.target.tagName !== 'li') return
     const stateName = e.target.innerHTML.toLowerCase()
-    // console.log(stateName)
-    this.setState({ selectedButton: stateName })
-    const { changeFilterHandler } = this.props
     changeFilterHandler(stateName)
   }
 
-  makeButton = (name) => ({
-    id: this.maxId++,
-    name,
+  const buttons = buttonNames.map(({ id, name }) => {
+    const isSelected = name.toLowerCase() === filterState
+    const className = isSelected ? 'selected' : ''
+    return (
+      <li key={id}>
+        <button type="button" className={className}>
+          {name}
+        </button>
+      </li>
+    )
   })
 
-  render() {
-    const { selectedButton } = this.state
-
-    const buttonNames = [this.makeButton('All'), this.makeButton('Active'), this.makeButton('Completed')]
-    const buttons = buttonNames.map(({ id, name }) => {
-      const isSelected = name.toLowerCase() === selectedButton
-      const className = isSelected ? 'selected' : ''
-      return (
-        <li key={id}>
-          <button type="button" className={className}>
-            {name}
-          </button>
-        </li>
-      )
-    })
-
-    return (
-      <ul className="filters" onClick={this.onClick}>
-        {buttons}
-      </ul>
-    )
-  }
+  return (
+    <ul className="filters" onClick={onClick}>
+      {buttons}
+    </ul>
+  )
 }
 
 export default TasksFilter
