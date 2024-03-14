@@ -26,7 +26,7 @@ function NewTaskForm({ addTaskHandler }) {
   }
 
   const emitTask = () => {
-    addTaskHandler(input, min, sec)
+    addTaskHandler(input, Number(min), Number(sec))
     clearAll()
   }
 
