@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
 import './Task.css'
+import useInput from '../../hooks/useInput'
+import useComponentWillUnmount from '../../hooks/useComponentWillUnmount'
 
 const formatSeconds = (seconds) => {
   const hours = Math.floor(seconds / 3600)
@@ -18,126 +21,111 @@ const formatSeconds = (seconds) => {
   return `${seconds}`
 }
 
-class Task extends React.Component {
-  state = {
-    // eslint-disable-next-line react/destructuring-assignment
-    time: this.props.time,
-    isEditing: false,
-    // eslint-disable-next-line react/destructuring-assignment
-    title: this.props.description,
+function Task(props) {
+  const {
+    description,
+    createdTime,
+    completed,
+    onToggleCompeleted,
+    onDeleted,
+    isTimerRun,
+    onTaskTitleUpdate,
+    onTimeUpdate,
+    time: propsTime,
+  } = props
+
+  const [isEditing, setEditing] = useState(false)
+  const [title, setTitle] = useInput(description)
+  const [time, setTime] = useState(propsTime)
+  const [isRun, setRun] = useState(isTimerRun)
+
+  const makeTick = () => {
+    setTime((value) => value + 1)
   }
 
-  // eslint-disable-next-line react/destructuring-assignment
-  isTimerRun = this.props.isTimerRun
-
-  componentDidMount() {
-    const { isTimerRun, timerPseudoStopDate } = this.props
-    const { time } = this.state
-
-    if (isTimerRun) {
-      const timeAfterPseudoStop = Math.floor((Date.now() - timerPseudoStopDate) / 1000)
-
-      this.setState({ time: time + timeAfterPseudoStop })
-      this.timerStart()
-    }
+  const timerStart = () => {
+    if (!isRun) setRun(true)
   }
 
-  componentWillUnmount() {
-    const { onTimeUpdate, onTaskTitleUpdate } = this.props
-    const { time: newTime, title } = this.state
-    const { isTimerRun } = this
-    this.timerStop()
-    onTimeUpdate(newTime, isTimerRun)
-    onTaskTitleUpdate(title)
+  const timerStop = () => {
+    if (isRun) setRun(false)
   }
 
-  makeTick = () => {
-    this.setState(({ time }) => ({ time: time + 1 }))
-  }
-
-  timerStart = () => {
-    if (!this.intervalId) {
-      this.intervalId = setInterval(this.makeTick, 1000)
-      this.isTimerRun = true
-    }
-  }
-
-  timerStop = () => {
-    if (this.intervalId) {
-      clearInterval(this.intervalId)
-      this.intervalId = null
-      this.isTimerRun = false
-    }
-  }
-
-  onToggleEditingMode = (e) => {
+  const onToggleEditingMode = (e) => {
     e.preventDefault()
-    const { isEditing, title } = this.state
 
     if (isEditing) {
-      const { onTaskTitleUpdate } = this.props
       onTaskTitleUpdate(title)
-      this.setState({
-        isEditing: false,
-      })
+      setEditing(false)
       return
     }
 
-    this.setState({ isEditing: true })
+    setEditing(true)
   }
 
-  onTitleChange = (e) => {
-    this.setState({
-      title: e.target.value,
-    })
-  }
+  useEffect(() => {
+    if (isRun) {
+      const id = setInterval(makeTick, 1000)
+      return () => {
+        clearInterval(id)
+      }
+    }
 
-  render() {
-    const { description, createdTime, completed, onToggleCompeleted, onDeleted } = this.props
-    const { isEditing, title } = this.state
-    const competedClass = completed ? 'completed' : ''
-    const editingClass = isEditing ? 'editing' : ''
-    const { time } = this.state
-    const itemClassNames = [competedClass, editingClass].filter((el) => el).join(' ')
+    return () => {}
+  })
 
-    const EditingTaskInput = isEditing ? (
-      <form onSubmit={this.onToggleEditingMode}>
-        <input
-          type="text"
-          className="edit"
-          value={title}
-          onChange={this.onTitleChange}
-          onBlur={this.onToggleEditingMode}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-        />
-      </form>
-    ) : null
+  useComponentWillUnmount(() => {
+    onTaskTitleUpdate(title)
+    onTimeUpdate(time, isRun)
+  })
 
-    const StaticTask = !isEditing ? (
-      <div className="view">
-        <input className="toggle" type="checkbox" checked={completed} onChange={onToggleCompeleted} />
-        <label>
-          <span className="title">{description}</span>
-          <span className="description">
-            <button type="button" className="icon icon-play" onClick={this.timerStart} />
-            <button type="button" className="icon icon-pause" onClick={this.timerStop} />
-            {formatSeconds(time)}
-          </span>
-          <span className="created">{`${formatDistanceToNow(createdTime)} ago`}</span>
-        </label>
-        <button type="button" className="icon icon-edit" onClick={this.onToggleEditingMode} />
-        <button type="button" className="icon icon-destroy" onClick={onDeleted} />
-      </div>
-    ) : null
+  useEffect(() => {
+    if (isTimerRun) {
+      timerStart()
+    }
+  }, [])
 
-    return (
-      <li className={itemClassNames}>
-        {StaticTask}
-        {EditingTaskInput}
-      </li>
-    )
-  }
+  const competedClass = completed ? 'completed' : ''
+  const editingClass = isEditing ? 'editing' : ''
+  const itemClassNames = [competedClass, editingClass].filter((el) => el).join(' ')
+
+  const EditingTaskInput = isEditing ? (
+    <form onSubmit={onToggleEditingMode}>
+      <input
+        type="text"
+        className="edit"
+        value={title}
+        onChange={setTitle}
+        onBlur={onToggleEditingMode}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
+      />
+    </form>
+  ) : null
+
+  const StaticTask = !isEditing ? (
+    <div className="view">
+      <input className="toggle" type="checkbox" checked={completed} onChange={onToggleCompeleted} />
+      <label>
+        <span className="title">{description}</span>
+        <span className="description">
+          <button type="button" className="icon icon-play" onClick={timerStart} />
+          <button type="button" className="icon icon-pause" onClick={timerStop} />
+          {formatSeconds(time)}
+        </span>
+        <span className="created">{`${formatDistanceToNow(createdTime)} ago`}</span>
+      </label>
+      <button type="button" className="icon icon-edit" onClick={onToggleEditingMode} />
+      <button type="button" className="icon icon-destroy" onClick={onDeleted} />
+    </div>
+  ) : null
+
+  return (
+    <li className={itemClassNames}>
+      {StaticTask}
+      {EditingTaskInput}
+    </li>
+  )
 }
 
 export default Task

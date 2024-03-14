@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
-import './NewTaskForm.css'
+import React from 'react'
 
-const useInput = (value) => {
-  const [state, setState] = useState(value)
-  const onChange = (e) => {
-    setState(e.target.value)
-  }
-  const clear = () => {
-    setState(value)
-  }
-  return [state, onChange, clear]
-}
+import './NewTaskForm.css'
+import useInput from '../../hooks/useInput'
+
+// const useInput = (value) => {
+//   const [state, setState] = useState(value)
+//   const onChange = (e) => {
+//     setState(e.target.value)
+//   }
+//   const clear = () => {
+//     setState(value)
+//   }
+//   return [state, onChange, clear]
+// }
 
 function NewTaskForm({ addTaskHandler }) {
   const [input, setInput, clearInput] = useInput('')
