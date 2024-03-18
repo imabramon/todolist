@@ -45,6 +45,11 @@ class NewTaskForm extends React.Component {
     e.preventDefault()
 
     const { currentInput } = this.state
+
+    if (currentInput.trim().length === 0) {
+      return
+    }
+
     let { currentMin, currentSec } = this.state
 
     if (currentMin === '') {
