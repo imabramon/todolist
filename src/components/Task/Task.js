@@ -18,6 +18,12 @@ const formatSeconds = (seconds) => {
   return `${seconds}`
 }
 
+const onKeyPress = (key, callback) => (e) => {
+  if (e.key === key) {
+    callback(e)
+  }
+}
+
 class Task extends React.Component {
   state = {
     // eslint-disable-next-line react/destructuring-assignment
@@ -92,6 +98,14 @@ class Task extends React.Component {
     })
   }
 
+  exitEditingMode = () => {
+    const { description } = this.props
+    this.setState({
+      isEditing: false,
+      title: description,
+    })
+  }
+
   render() {
     const { description, createdTime, completed, onToggleCompeleted, onDeleted } = this.props
     const { isEditing, title } = this.state
@@ -107,7 +121,8 @@ class Task extends React.Component {
           className="edit"
           value={title}
           onChange={this.onTitleChange}
-          onBlur={this.onToggleEditingMode}
+          onKeyDown={onKeyPress('Escape', this.exitEditingMode)}
+          onBlur={this.exitEditingMode}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
         />
