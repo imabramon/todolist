@@ -43,7 +43,7 @@ class Task extends React.Component {
     if (isTimerRun) {
       const timeAfterPseudoStop = Math.floor((Date.now() - timerPseudoStopDate) / 1000)
 
-      this.setState({ time: time + timeAfterPseudoStop })
+      this.setState({ time: time - timeAfterPseudoStop })
       this.timerStart()
     }
   }
@@ -58,10 +58,20 @@ class Task extends React.Component {
   }
 
   makeTick = () => {
-    this.setState(({ time }) => ({ time: time + 1 }))
+    console.log(this.intervalId)
+    this.setState(({ time }) => {
+      if (!time) {
+        this.timerStop()
+        return {}
+      }
+      return { time: time - 1 }
+    })
   }
 
   timerStart = () => {
+    const { time } = this.state
+    if (time === 0) return
+
     if (!this.intervalId) {
       this.intervalId = setInterval(this.makeTick, 1000)
       this.isTimerRun = true
