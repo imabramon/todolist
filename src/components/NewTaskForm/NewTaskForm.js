@@ -7,6 +7,16 @@ const defaultState = {
   currentSec: '',
 }
 
+const preventNotNumber = (callback) => (e) => {
+  if (e.nativeEvent.data) {
+    if (!/[0-9]/.test(e.nativeEvent.data)) {
+      e.preventDefault()
+      return
+    }
+  }
+  callback(e)
+}
+
 class NewTaskForm extends React.Component {
   constructor() {
     super()
@@ -17,13 +27,13 @@ class NewTaskForm extends React.Component {
     this.setStateByValue('currentInput', e)
   }
 
-  onMinChange = (e) => {
+  onMinChange = preventNotNumber((e) => {
     this.setStateByValue('currentMin', e)
-  }
+  })
 
-  onSecChange = (e) => {
+  onSecChange = preventNotNumber((e) => {
     this.setStateByValue('currentSec', e)
-  }
+  })
 
   setStateByValue = (name, e) => {
     this.setState({
@@ -83,6 +93,7 @@ class NewTaskForm extends React.Component {
             value={currentMin}
             onChange={this.onMinChange}
             form="todo-form"
+            maxLength={2}
           />
           <input
             className="new-todo-form__timer"
