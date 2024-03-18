@@ -19,9 +19,9 @@ class App extends React.Component {
     this.state = {
       currentView: 'all',
       items: [
-        this.makeTask('Make react app', new Date('2024-02-17T03:24:00'), 0, true),
-        this.makeTask('buy snus', new Date('2024-02-17T03:24:00')),
-        this.makeTask('go to shop', new Date('2024-02-17T03:24:00')),
+        this.makeTask('Make react app', new Date('2024-02-17T03:24:00'), 120, true),
+        this.makeTask('buy snus', new Date('2024-02-17T03:24:00'), 10),
+        this.makeTask('go to shop', new Date('2024-02-17T03:24:00'), 600),
       ],
     }
   }

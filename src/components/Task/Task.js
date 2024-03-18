@@ -58,7 +58,6 @@ class Task extends React.Component {
   }
 
   makeTick = () => {
-    console.log(this.intervalId)
     this.setState(({ time }) => {
       if (!time) {
         this.timerStop()
