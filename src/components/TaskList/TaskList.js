@@ -8,7 +8,7 @@ function TodoList({ items, deleteTaskHandler, toggleCompeletedHandler, updateTim
     const { id, ...itemProps } = item
     if (itemProps.isTimerRun) {
       const timeAfterPseudoStop = Math.floor((Date.now() - itemProps.timerPseudoStopDate) / 1000)
-      itemProps.time += timeAfterPseudoStop
+      itemProps.time -= timeAfterPseudoStop
     }
 
     return (

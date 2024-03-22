@@ -45,16 +45,22 @@ function Task(props) {
   const [time, setTime] = useState(propsTime)
   const [isRun, setRun] = useState(isTimerRun)
 
-  const makeTick = () => {
-    setTime((value) => value + 1)
-  }
-
   const timerStart = () => {
+    if (time === 0) return
     if (!isRun) setRun(true)
   }
 
   const timerStop = () => {
     if (isRun) setRun(false)
+  }
+
+  const makeTick = () => {
+    console.log('tick')
+    if (time === 0) {
+      timerStop()
+      return
+    }
+    setTime((value) => value - 1)
   }
 
   const onToggleEditingMode = (e) => {
