@@ -82,9 +82,9 @@ const ViewTypes = {
 }
 
 const tasksInitState = [
-  makeTask('Make react app', new Date('2024-02-17T03:24:00'), 0, true),
-  makeTask('buy snus', new Date('2024-02-17T03:24:00')),
-  makeTask('go to shop', new Date('2024-02-17T03:24:00')),
+  makeTask('Make react app', new Date('2024-02-17T03:24:00'), 120, true),
+  makeTask('buy snus', new Date('2024-02-17T03:24:00'), 60),
+  makeTask('go to shop', new Date('2024-02-17T03:24:00'), 360),
 ]
 
 function App() {

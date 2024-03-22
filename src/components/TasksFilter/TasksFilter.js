@@ -14,7 +14,6 @@ function TasksFilter(props) {
   const { filterState, changeFilterHandler } = props
 
   const onClick = (e) => {
-    console.log(e.target.tagName)
     if (e.target.tagName === 'UL') return
     const stateName = e.target.innerHTML.toLowerCase()
     changeFilterHandler(stateName)

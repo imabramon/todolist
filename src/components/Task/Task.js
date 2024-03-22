@@ -55,7 +55,6 @@ function Task(props) {
   }
 
   const makeTick = () => {
-    console.log('tick')
     if (time === 0) {
       timerStop()
       return
