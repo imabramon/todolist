@@ -5,6 +5,12 @@ import './Task.css'
 import useInput from '../../hooks/useInput'
 import useComponentWillUnmount from '../../hooks/useComponentWillUnmount'
 
+const onKeyPress = (key, callback) => (e) => {
+  if (e.key === key) {
+    callback(e)
+  }
+}
+
 const formatSeconds = (seconds) => {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor(seconds / 60)
@@ -85,6 +91,12 @@ function Task(props) {
     }
   }, [])
 
+  const exitEditingMode = () => {
+    const { description: prevDescription } = props
+    setEditing(false)
+    setTitle({ target: { value: prevDescription } })
+  }
+
   const competedClass = completed ? 'completed' : ''
   const editingClass = isEditing ? 'editing' : ''
   const itemClassNames = [competedClass, editingClass].filter((el) => el).join(' ')
@@ -96,7 +108,8 @@ function Task(props) {
         className="edit"
         value={title}
         onChange={setTitle}
-        onBlur={onToggleEditingMode}
+        onKeyDown={onKeyPress('Escape', exitEditingMode)}
+        onBlur={exitEditingMode}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
       />
