@@ -3,21 +3,23 @@ import React from 'react'
 import './NewTaskForm.css'
 import useInput from '../../hooks/useInput'
 
-// const useInput = (value) => {
-//   const [state, setState] = useState(value)
-//   const onChange = (e) => {
-//     setState(e.target.value)
-//   }
-//   const clear = () => {
-//     setState(value)
-//   }
-//   return [state, onChange, clear]
-// }
+const preventNotNumber = (callback) => (e) => {
+  if (e.nativeEvent.data) {
+    if (!/[0-9]/.test(e.nativeEvent.data)) {
+      e.preventDefault()
+      return
+    }
+  }
+  callback(e)
+}
 
 function NewTaskForm({ addTaskHandler }) {
   const [input, setInput, clearInput] = useInput('')
-  const [min, setMin, clearMin] = useInput('')
-  const [sec, setSec, clearSec] = useInput('')
+  const [min, setMinText, clearMin] = useInput('')
+  const [sec, setSecText, clearSec] = useInput('')
+
+  const setMin = preventNotNumber(setMinText)
+  const setSec = preventNotNumber(setSecText)
 
   const clearAll = () => {
     clearInput()
@@ -26,6 +28,7 @@ function NewTaskForm({ addTaskHandler }) {
   }
 
   const emitTask = () => {
+    if (input.length === 0) return
     addTaskHandler(input, Number(min), Number(sec))
     clearAll()
   }
@@ -51,8 +54,22 @@ function NewTaskForm({ addTaskHandler }) {
         onKeyDown={onKeyDown} //
       >
         <input className="new-todo" placeholder="What I've Done?" value={input} onChange={setInput} form="todo-form" />
-        <input className="new-todo-form__timer" placeholder="Min" value={min} onChange={setMin} form="todo-form" />
-        <input className="new-todo-form__timer" placeholder="Sec" value={sec} onChange={setSec} form="todo-form" />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          value={min}
+          onChange={setMin}
+          form="todo-form"
+          maxLength={2}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          value={sec}
+          onChange={setSec}
+          form="todo-form"
+          maxLength={2}
+        />
       </form>
     </header>
   )
